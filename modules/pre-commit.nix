@@ -115,7 +115,7 @@ let
     runCommand "pre-commit-run" { buildInputs = [ git ]; } ''
       set +e
       HOME=$PWD
-      cp --no-preserve=mode -R ${src} src
+      cp --no-preserve=mode -R ${cfg.rootSrc} src
       unlink src/.pre-commit-hooks || true
       ln -fs ${hooks} src/.pre-commit-hooks
       cd src
@@ -135,9 +135,9 @@ let
 
   srcStr = toString ( config.root.origSrc or config.root );
 
-  # TODO: allow gitignore.nix
-  src = config.root;
-
+  # TODO: provide a default pin that the user may override
+  inherit (import (import ../nix/sources.nix).gitignore { inherit lib; })
+    gitignoreSource;
 in
 {
   options.pre-commit = {
@@ -179,6 +179,26 @@ in
       '';
       default = {};
     };
+
+    run = mkOption {
+      type = types.package;
+      description = ''
+        A derivation that tests whether the pre-commit hooks run cleanly on
+        the entire project.
+      '';
+      readOnly = true;
+      default = run;
+    };
+
+    rootSrc = mkOption {
+      type = types.package;
+      description = ''
+        The source of the project to be checked.
+      '';
+      defaultText = literalExample ''gitignoreSource config.root'';
+      default = gitignoreSource config.root;
+    };
+
   };
 
   config = mkIf cfg.enable {
