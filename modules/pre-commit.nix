@@ -20,9 +20,8 @@ let
     options = {
       enable = mkOption {
         type = types.bool;
-        # TODO: actually activate it, s/prepare/enable
         description = ''
-          Whether to prepare this pre-commit hook.
+          Whether to enable this pre-commit hook.
         '';
         default = false;
       };

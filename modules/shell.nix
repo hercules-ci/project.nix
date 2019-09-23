@@ -25,7 +25,12 @@ in
         bash snippets to run when entering the project's nix-shell.
       '';
       default = [];
-      example = [''if ! type git >/dev/null; then echo 1>&2 "git command not found! Please install git on your system or user profile"; fi''];
+      example = [''
+          if ! type git >/dev/null; then
+            echo 1>&2 "git command not found! Please install git on your system or user profile";
+          fi
+        ''
+      ];
     };
 
     # TODO: can we specify merge functions in an extensible way?
