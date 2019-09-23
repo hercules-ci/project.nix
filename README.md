@@ -1,4 +1,9 @@
 
+# Project Status: Work in Progress
+
+This project is experimental and needs work to do anything like what it promises.
+
+
 # project.nix
 
 *A configuration manager for your projects*
