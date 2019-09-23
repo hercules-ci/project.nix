@@ -128,7 +128,7 @@ let
       echo "Running: $ pre-commit run --all-files"
       ${cfg.package}/bin/pre-commit run --all-files
       exitcode=$?
-      git diff
+      git --no-pager diff --color
       touch $out
       [ $? -eq 0 ] && exit $exitcode
     '';
