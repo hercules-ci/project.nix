@@ -16,6 +16,7 @@ let
     ./modules/nixpkgs.nix
     ./modules/shell.nix
     ./modules/niv.nix
+    ./modules/pre-commit.nix
   ];
 
 in
