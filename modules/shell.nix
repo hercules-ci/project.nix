@@ -19,7 +19,14 @@ in
       '';
     };
 
-    # TODO shellHook hooks
+    hooks = mkOption {
+      type = types.listOf types.str;
+      description = ''
+        bash snippets to run when entering the project's nix-shell.
+      '';
+      default = [];
+      example = [''if ! type git >/dev/null; then echo 1>&2 "git command not found! Please install git on your system or user profile"; fi''];
+    };
 
     # TODO environment variables
 
@@ -34,6 +41,7 @@ in
   config = {
     shell.shell = pkgs.mkShell {
       nativeBuildInputs = cfg.packages;
+      shellHook = lib.concatStringsSep "\n" cfg.hooks;
     };
   };
 }
