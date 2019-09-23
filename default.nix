@@ -17,6 +17,7 @@ let
     ./modules/shell.nix
     ./modules/niv.nix
     ./modules/pre-commit.nix
+    ./modules/activation.nix
   ];
 
 in

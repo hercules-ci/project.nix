@@ -163,10 +163,9 @@ in
 
   config = mkIf cfg.enable {
 
-    # TODO: generalize the setup logic
-    # TODO: only autoinstall when in the project root
-    # TODO: always ignore when src is in the store
-    shell.hooks = mkIf cfg.enableAutoInstall [
+    shell.packages = [ cfg.package ];
+
+    activation.hooks = mkIf cfg.enableAutoInstall [
       ''
         export PATH=$PATH:${cfg.package}/bin
         if ! type -t git >/dev/null; then
