@@ -3,7 +3,11 @@
 {
   "repos": [
     {
-      "hooks": [],
+      "hooks": [
+        {
+          "id": "nixpkgs-fmt"
+        }
+      ],
       "repo": ".pre-commit-hooks/",
       "rev": "master"
     }
