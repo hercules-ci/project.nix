@@ -4,6 +4,7 @@ let
 
   inherit (lib)
     attrNames
+    concatStringsSep
     filterAttrs
     literalExample
     mapAttrsToList
@@ -16,79 +17,89 @@ let
 
   cfg = config.pre-commit;
 
-  hookType = types.submodule ({ config, name, ... }: {
-    options = {
-      enable = mkOption {
-        type = types.bool;
-        description = ''
-          Whether to enable this pre-commit hook.
-        '';
-        default = false;
-      };
-      raw = mkOption {
-        type = types.attrsOf types.unspecified;
-        description = ''
-          Raw fields of a pre-commit hook. This is mostly for internal use but
-          exposed in case you need to work around something.
-
-          Default: taken from the other hook options.
-        '';
-      };
-      name = mkOption {
-        type = types.str;
-        default = name;
-        defaultText = literalExample "internal name, same as id";
-        description = ''
-          The name of the hook - shown during hook execution.
-        '';
-      };
-      entry = mkOption {
-        type = types.str;
-        description = ''
-          The entry point - the executable to run. entry can also contain arguments that will not be overridden such as entry: autopep8 -i.
-        '';
-      };
-      language = mkOption {
-        type = types.str;
-        description = ''
-          The language of the hook - tells pre-commit how to install the hook.
-        '';
-        default = "system";
-      };
-      files = mkOption {
-        type = types.str;
-        description = ''
-          The pattern of files to run on.
-        '';
-        default = "";
-      };
-      types = mkOption {
-        type = types.listOf types.str;
-        description = ''
-          List of file types to run on. See Filtering files with types (https://pre-commit.com/#plugins).
-        '';
-        default = ["file"];
-      };
-      description = mkOption {
-        type = types.str;
-        description = ''
-          Description of the hook. used for metadata purposes only.
-        '';
-        default = "";
-      };
-      # TODO: exclude and some more
-    };
-    config = {
-      raw =
-        {
-          inherit (config) name entry language files types;
-          id = name;
+  hookType = types.submodule (
+    { config, name, ... }: {
+      options = {
+        enable = mkOption {
+          type = types.bool;
+          description = ''
+            Whether to enable this pre-commit hook.
+          '';
+          default = false;
         };
-    };
-  });
+        raw = mkOption {
+          type = types.attrsOf types.unspecified;
+          description = ''
+            Raw fields of a pre-commit hook. This is mostly for internal use but
+            exposed in case you need to work around something.
+
+            Default: taken from the other hook options.
+          '';
+        };
+        name = mkOption {
+          type = types.str;
+          default = name;
+          defaultText = literalExample "internal name, same as id";
+          description = ''
+            The name of the hook - shown during hook execution.
+          '';
+        };
+        entry = mkOption {
+          type = types.str;
+          description = ''
+            The entry point - the executable to run. entry can also contain arguments that will not be overridden such as entry: autopep8 -i.
+          '';
+        };
+        language = mkOption {
+          type = types.str;
+          description = ''
+            The language of the hook - tells pre-commit how to install the hook.
+          '';
+          default = "system";
+        };
+        files = mkOption {
+          type = types.str;
+          description = ''
+            The pattern of files to run on.
+          '';
+          default = "";
+        };
+        types = mkOption {
+          type = types.listOf types.str;
+          description = ''
+            List of file types to run on. See Filtering files with types (https://pre-commit.com/#plugins).
+          '';
+          default = [ "file" ];
+        };
+        description = mkOption {
+          type = types.str;
+          description = ''
+            Description of the hook. used for metadata purposes only.
+          '';
+          default = "";
+        };
+        excludes = mkOption {
+          type = types.listOf types.str;
+          description = ''
+            Exclude files that were matched by these patterns.
+          '';
+          default = [];
+        };
+      };
+      config = {
+        raw =
+          {
+            inherit (config) name entry language files types;
+            id = name;
+            exclude = if config.excludes == [] then "^$" else
+              "(${concatStringsSep "|" config.excludes})";
+          };
+      };
+    }
+  );
 
   enabledHooks = filterAttrs (id: value: value.enable) cfg.hooks;
-  processedHooks = mapAttrsToList (id: value: value.raw // { inherit id; } ) enabledHooks;
+  processedHooks = mapAttrsToList (id: value: value.raw // { inherit id; }) enabledHooks;
 
   precommitConfig = {
     repos = [
@@ -140,11 +151,12 @@ let
       [ $? -eq 0 ] && exit $exitcode
     '';
 
-  srcStr = toString ( config.root.origSrc or config.root );
+  srcStr = toString (config.root.origSrc or config.root);
 
   # TODO: provide a default pin that the user may override
   inherit (import (import ../nix/sources.nix).gitignore { inherit lib; })
-    gitignoreSource;
+    gitignoreSource
+    ;
 in
 {
   options.pre-commit = {

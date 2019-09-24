@@ -42,5 +42,6 @@ in
     shell.packages = [
       cfg.package
     ];
+    pre-commit.hooks.nixpkgs-fmt.excludes = [ "nix/sources.nix$" ];
   };
 }
