@@ -1,7 +1,5 @@
-{ projectNix ?
-    import ../default.nix {}
-, project ?
-    projectNix.evalProject { modules = [ ./project.nix ]; }
+{ projectNix ? import ../default.nix {}
+, project ? projectNix.evalProject { modules = [ ./project.nix ]; }
 }:
 
 {

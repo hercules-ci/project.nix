@@ -50,13 +50,17 @@ in
       shell.extraAttrs.activationHook =
         concatStringsSep "\n" cfg.hooks;
 
-      shell.hooks = mkIf (isOutsideStore config.root) (mkOrder 300 [''
-        (
-          echo 1>&2 project.nix: activating in ${lib.escapeShellArg config.root}
-          cd ${lib.escapeShellArg config.root}
-          runHook activationHook
-        )
-      '']);
+      shell.hooks = mkIf (isOutsideStore config.root) (
+        mkOrder 300 [
+          ''
+            (
+              echo 1>&2 project.nix: activating in ${lib.escapeShellArg config.root}
+              cd ${lib.escapeShellArg config.root}
+              runHook activationHook
+            )
+          ''
+        ]
+      );
     };
 
 }

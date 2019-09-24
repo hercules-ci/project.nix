@@ -25,7 +25,8 @@ in
         bash snippets to run when entering the project's nix-shell.
       '';
       default = [];
-      example = [''
+      example = [
+        ''
           if ! type git >/dev/null; then
             echo 1>&2 "git command not found! Please install git on your system or user profile";
           fi
@@ -52,9 +53,11 @@ in
   };
 
   config = {
-    shell.shell = pkgs.mkShell (cfg.extraAttrs // {
-      nativeBuildInputs = cfg.packages;
-      shellHook = lib.concatStringsSep "\n" cfg.hooks;
-    });
+    shell.shell = pkgs.mkShell (
+      cfg.extraAttrs // {
+        nativeBuildInputs = cfg.packages;
+        shellHook = lib.concatStringsSep "\n" cfg.hooks;
+      }
+    );
   };
 }

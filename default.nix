@@ -1,5 +1,4 @@
-{ lib ?
-    import ((import ./nix/sources.nix).nixpkgs + "/lib")
+{ lib ? import ((import ./nix/sources.nix).nixpkgs + "/lib")
 , ...
 }:
 
