@@ -69,6 +69,13 @@ let
         '';
         default = ["file"];
       };
+      description = mkOption {
+        type = types.str;
+        description = ''
+          Description of the hook. used for metadata purposes only.
+        '';
+        default = "";
+      };
       # TODO: exclude and some more
     };
     config = {
@@ -80,14 +87,15 @@ let
     };
   });
 
-  processedHooks = mapAttrsToList (id: value: value.raw // { inherit id; } ) (filterAttrs (id: value: value.enable) cfg.hooks);
+  enabledHooks = filterAttrs (id: value: value.enable) cfg.hooks;
+  processedHooks = mapAttrsToList (id: value: value.raw // { inherit id; } ) enabledHooks;
 
   precommitConfig = {
     repos = [
       {
         repo = ".pre-commit-hooks/";
         rev = "master";
-        hooks = mapAttrsToList (id: _value: { inherit id; }) cfg.hooks;
+        hooks = mapAttrsToList (id: _value: { inherit id; }) enabledHooks;
       }
     ];
   };
