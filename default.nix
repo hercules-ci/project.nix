@@ -18,8 +18,10 @@ let
     ./modules/niv.nix
   ];
 
+  libDimension = import ./lib/dimension.nix { inherit lib; };
+
 in
 {
   inherit evalProject;
-
+  inherit (libDimension) dimension;
 }
