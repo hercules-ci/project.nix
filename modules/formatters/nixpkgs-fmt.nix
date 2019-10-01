@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, options, pkgs, ... }:
 
 let
 
@@ -32,12 +32,11 @@ in
     };
   };
 
-  config = {
+  config = lib.optionalAttrs (options ? pre-commit.hooks) {
     pre-commit.hooks.nixpkgs-fmt = {
-      inherit description;
       inherit (cfg) enable;
-      entry = "${cfg.package}/bin/nixpkgs-fmt";
-      files = ''\.nix$'';
+      # TODO: upstream the update, remove this
+      entry = lib.mkForce "${cfg.package}/bin/nixpkgs-fmt";
     };
   };
 }
