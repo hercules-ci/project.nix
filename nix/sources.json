@@ -24,15 +24,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nix-pre-commit-hooks": {
-        "branch": "modular",
+        "branch": "master",
         "description": "Seamless integration of https://pre-commit.com git hooks with Nix.",
         "homepage": "",
         "owner": "hercules-ci",
         "repo": "nix-pre-commit-hooks",
-        "rev": "a1f5c165f3dba9ea2efab685ee6f6d1f06913a32",
-        "sha256": "11kypfzpkk6x1dxi5qdk28vgfyap05ccr7ahhnb8s7k22wx8dkxi",
+        "rev": "f823ad355d0b78ab5fad2ef96cd4289ff51cdb06",
+        "sha256": "14sdbvw2xfabv3k4rlqnpazgkjwxfd9vi1qvlrfhfv0i0gg064vn",
         "type": "tarball",
-        "url": "https://github.com/hercules-ci/nix-pre-commit-hooks/archive/a1f5c165f3dba9ea2efab685ee6f6d1f06913a32.tar.gz",
+        "url": "https://github.com/hercules-ci/nix-pre-commit-hooks/archive/f823ad355d0b78ab5fad2ef96cd4289ff51cdb06.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
