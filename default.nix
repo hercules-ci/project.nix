@@ -17,7 +17,6 @@ let
     ./modules/niv.nix
     ./modules/pre-commit.nix
     ./modules/activation.nix
-    ./modules/formatters/nixpkgs-fmt.nix
   ];
 
 in
