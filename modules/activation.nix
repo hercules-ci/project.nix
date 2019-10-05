@@ -53,11 +53,14 @@ in
       shell.hooks = mkIf (isOutsideStore config.root) (
         mkOrder 300 [
           ''
-            (
-              echo 1>&2 project.nix: activating in ${lib.escapeShellArg config.root}
-              cd ${lib.escapeShellArg config.root}
-              runHook activationHook
-            )
+            # lorri runs the shellHook in the sandbox first, so skip if that's happening.
+            if ! [[ "$name" =~ lorri-.*-hack ]]; then
+              (
+                echo 1>&2 project.nix: activating in ${lib.escapeShellArg config.root}
+                cd ${lib.escapeShellArg config.root}
+                runHook activationHook
+              )
+            fi
           ''
         ]
       );
