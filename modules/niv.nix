@@ -43,8 +43,8 @@ in
       shell.packages = [
         cfg.package
       ];
-    } // lib.optionalAttrs (options ? pre-commit.hooks) {
-      pre-commit.hooks.nixpkgs-fmt.excludes = [ "nix/sources.nix$" ];
+    } // lib.optionalAttrs (options ? pre-commit.excludes) {
+      pre-commit.excludes = [ "nix/sources.nix$" ];
     }
   );
 }
