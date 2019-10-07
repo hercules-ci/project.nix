@@ -24,24 +24,13 @@ in
       '';
     };
 
-    enableAutoInstall = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to auto install pre-commit when invoking nix-shell in the
-        project root.
-
-        Unused if not pre-commit.enabled.
-      '';
-    };
-
   };
 
   config = mkIf cfg.enable {
 
     shell.packages = [ cfg.package ];
 
-    activation.hooks = mkIf cfg.enableAutoInstall [
+    activation.hooks = [
       config.pre-commit.installationScript
     ];
 
