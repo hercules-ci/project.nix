@@ -1,5 +1,4 @@
-{ lib ?
-    import ((import ./nix/sources.nix).nixpkgs + "/lib")
+{ lib ? import ((import ./nix/sources.nix).nixpkgs + "/lib")
 , ...
 }:
 
@@ -16,6 +15,8 @@ let
     ./modules/nixpkgs.nix
     ./modules/shell.nix
     ./modules/niv.nix
+    ./modules/pre-commit.nix
+    ./modules/activation.nix
   ];
 
   libDimension = import ./lib/dimension.nix { inherit lib; };

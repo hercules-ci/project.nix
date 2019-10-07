@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, options, pkgs, ... }:
 
 let
   inherit (lib) mkIf mkOption types;
@@ -38,9 +38,13 @@ in
 
   };
 
-  config = mkIf cfg.enable {
-    shell.packages = [
-      cfg.package
-    ];
-  };
+  config = mkIf cfg.enable (
+    {
+      shell.packages = [
+        cfg.package
+      ];
+    } // lib.optionalAttrs (options ? pre-commit.excludes) {
+      pre-commit.excludes = [ "nix/sources.nix$" ];
+    }
+  );
 }
