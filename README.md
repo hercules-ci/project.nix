@@ -23,6 +23,20 @@ Your project will have a file `nix/project.nix`. It is a Nix module (which is li
 
 By default, the configuration is applied when you run `nix-shell` in your project root or on `direnv allow`.
 
+# Extending it
+
+The module system doesn't actually distinguish between configurations (like `nix/project.nix`) and other modules.
+
+So to extend `project.nix` is a process of small refactorings:
+
+ - Create a boilerplate module `nix/project-foo.nix` with contents `{ config, lib, options, pkgs, ... }: { }`.
+ - Add `imports = [ ./project-foo.nix ];` to your `nix/project.nix`.
+ - Move configuration from `project.nix` into the new module.
+ - Add option definitions for things that are project-specific.
+ - When satisfied, make a PR to `project.nix` (`modules/foo.nix`) or a related project using the by-convention location `nix/project-module.nix`.
+
+<!-- TODO: example of how to deal with missing options aka the expression problem -->
+
 # Features
 
  - pre-commit integration
