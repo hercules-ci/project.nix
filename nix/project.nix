@@ -16,6 +16,4 @@
   pre-commit.tools.nixpkgs-fmt = lib.mkForce pkgs.nixpkgs-fmt;
   pre-commit.hooks.nixpkgs-fmt.enable = true;
 
-  # TODO: upstream the command line change, remove this
-  pre-commit.hooks.nixpkgs-fmt.entry = lib.mkForce "${config.pre-commit.tools.nixpkgs-fmt}/bin/nixpkgs-fmt";
 }
