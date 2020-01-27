@@ -25,7 +25,8 @@ in
       ''import (config.root + "/nix/default.nix") {}'';
   };
 
-  config._module.args = {
-    pkgs = config.nixpkgs.pkgs;
+  config = {
+    _module.args.pkgs = config.nixpkgs.pkgs;
+    packageSets.sets.nixpkgs = config.nixpkgs.pkgs;
   };
 }
