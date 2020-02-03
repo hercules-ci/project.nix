@@ -34,5 +34,7 @@ in
       config.pre-commit.installationScript
     ];
 
+    checks.pre-commit = cfg.run;
+
   };
 }

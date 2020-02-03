@@ -17,6 +17,8 @@ let
     ./modules/niv.nix
     ./modules/pre-commit.nix
     ./modules/activation.nix
+    ./modules/package-sets.nix
+    ./modules/checks.nix
   ];
 
   libDimension = import ./lib/dimension.nix { inherit lib; };
