@@ -23,7 +23,7 @@ in
 {
   options.checks = mkOption {
     type = nestedAttrsOf (types.nullOr types.package);
-    default = [];
+    default = {};
     description = ''
       Packages that ought be buildable, for the purpose of ensuring the quality
       of the project.
