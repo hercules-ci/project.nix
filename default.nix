@@ -11,6 +11,7 @@ let
     };
 
   builtinModules = [
+    # core
     ./modules/root.nix
     ./modules/nixpkgs.nix
     ./modules/shell.nix
@@ -19,6 +20,9 @@ let
     ./modules/activation.nix
     ./modules/package-sets.nix
     ./modules/checks.nix
+
+    # language integrations
+    ./modules/haskell-nix.nix
   ];
 
   libDimension = import ./lib/dimension.nix { inherit lib; };
