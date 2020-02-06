@@ -4,14 +4,13 @@
   for project.nix _itself_.
 
  */
-{ config, lib, pkgs, ... }: {
+{ config, lib, pkgs, sources, ... }: {
 
   imports = [
-    ((import ./sources.nix).nix-pre-commit-hooks + "/nix/project-module.nix")
+    (sources.nix-pre-commit-hooks + "/nix/project-module.nix")
   ];
 
   root = ../.;
-  pinning.niv.enable = true;
   pre-commit.enable = true;
   pre-commit.tools.nixpkgs-fmt = lib.mkForce pkgs.nixpkgs-fmt;
   pre-commit.hooks.nixpkgs-fmt.enable = true;

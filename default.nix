@@ -1,14 +1,44 @@
-{ lib ? import ((import ./nix/sources.nix).nixpkgs + "/lib")
-, ...
-}:
+rec {
+  /*
+      Minimal arguments:
 
-let
+      sources         By convention: import ./sources.nix
+                      An attribute set of sources.
+      modules         By convention: [ ./project.nix ]
+                      The project.nix configuration modules.
+   */
+  evalNivProject =
+    { modules
+    , sources
+    , nixpkgs ? sources.nixpkgs
+    , lib ? import (nixpkgs + "/lib")
+    , specialArgs ? {}
+    }:
+      let
+        out = evalProject {
+          inherit lib;
+          modules = modules ++ [ { config.pinning.niv.enable = true; } ];
+          specialArgs = specialArgs // {
+            inherit sources;
+          };
+        };
+      in
+        out;
 
   evalProject =
-    { modules ? [] }: lib.evalModules {
-      check = true;
-      modules = builtinModules ++ modules;
-    };
+    { modules
+    , specialArgs ? {}
+    , nixpkgs ? <nixpkgs>
+    , lib ? import (nixpkgs + "/lib")
+    }:
+      let
+        out = lib.evalModules {
+          check = true;
+          modules = builtinModules ++ modules;
+          specialArgs = specialArgs;
+        };
+      in
+        out;
 
   builtinModules = [
     # core
@@ -25,10 +55,5 @@ let
     ./modules/haskell-nix.nix
   ];
 
-  libDimension = import ./lib/dimension.nix { inherit lib; };
-
-in
-{
-  inherit evalProject;
-  inherit (libDimension) dimension;
+  # If you're looking for `dimension`, please import lib/dimension.nix directly.
 }
