@@ -174,6 +174,7 @@ in
     packageSets.haskell-nix = mkOption {
       description = "Adds haskell.nix package sets to the sets argument.";
       type = types.attrsOf (types.submodule submod);
+      default = {};
     };
   };
 
