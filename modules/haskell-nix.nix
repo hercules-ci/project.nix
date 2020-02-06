@@ -113,9 +113,12 @@ let
               (import config.sources.haskell-nix).overlays ++ [
                 (
                   self: super: {
-                    haskell-nix = super.haskell-nix // {
-                      hackageSrc = if config.sources.hackage-nix == null then super.hackageSrc else config.sources.hackage-nix;
-                      stackageSrc = if config.sources.stackage-nix == null then super.stackageSrc else config.sources.stackage-nix;
+                    haskell-nix = super.haskell-nix
+                    // lib.optionalAttrs (config.sources.hackage-nix != null) {
+                      hackageSrc = config.sources.hackage-nix;
+                    }
+                    // lib.optionalAttrs (config.sources.stackage-nix != null) {
+                      stackageSrc = config.sources.stackage-nix;
                     };
                   }
                 )
