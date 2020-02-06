@@ -10,7 +10,7 @@ let
       options = {
         # We need a new interface into haskell.nix that is a submodule type.
         # This will let us expose the haskell.nix options here.
-        modules = mkOption {
+        configuration = mkOption {
           description = ''
             haskell.nix module options.
 
@@ -60,7 +60,7 @@ let
             (
               lib.filterAttrs
                 (name: pkgCfg: pkgCfg != null && pkgCfg.isLocal or false)
-                config.modules.hsPkgs
+                config.configuration.hsPkgs
             );
       };
     };
@@ -138,19 +138,27 @@ let
               let
                 self = pkgs';
               in
-                with haskell-nix; # from here on it's a bit like upstream stackProject'
+                with haskell-nix; # from here on it's like upstream stackProject', except the last line
                 { ... }@args:
                   let
-                    stack = importAndFilterProject (callStackToNix args);
-                    pkg-set = mkStackPkgSet {
-                      stack-pkgs = stack.pkgs;
-                      pkg-def-extras = (args.pkg-def-extras or []);
-                      modules = (args.modules or [])
-                      ++ self.lib.optional (args ? ghc) { ghc.package = args.ghc; }
-                      ++ self.lib.optional (args ? cache) (mkCacheModule args.cache);
+                    stack = importAndFilterProject (callStackToNix ({ inherit cache; } // args));
+                    generatedCache = genStackCache {
+                      inherit (args) src;
+                      stackYaml = args.stackYaml or "stack.yaml";
                     };
+                    cache = args.cache or generatedCache;
                   in
-                    pkg-set;
+                    let
+                      pkg-set = mkStackPkgSet
+                        {
+                          stack-pkgs = stack.pkgs;
+                          pkg-def-extras = (args.pkg-def-extras or []);
+                          modules = self.lib.singleton (mkCacheModule cache)
+                          ++ (args.modules or [])
+                          ++ self.lib.optional (args ? ghc) { ghc.package = args.ghc; };
+                        };
+                    in
+                      pkg-set;
 
             it = stackPackageSet {
               src = dirOf config.stackYaml;
