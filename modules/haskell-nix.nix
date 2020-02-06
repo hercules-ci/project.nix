@@ -10,7 +10,7 @@ let
       options = {
         # We need a new interface into haskell.nix that is a submodule type.
         # This will let us expose the haskell.nix options here.
-        cfg = mkOption {
+        modules = mkOption {
           description = ''
             haskell.nix module options.
 
@@ -27,7 +27,7 @@ let
         applyModules = mkOption {
           internal = true;
           description = ''
-            Function to apply when returning cfg.
+            Function to apply when returning modules.
           '';
           type = types.unspecified;
           # TODO or a cabal file
@@ -60,7 +60,7 @@ let
             (
               lib.filterAttrs
                 (name: pkgCfg: pkgCfg != null && pkgCfg.isLocal or false)
-                config.cfg.hsPkgs
+                config.modules.hsPkgs
             );
       };
     };
