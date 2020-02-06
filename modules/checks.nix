@@ -15,7 +15,7 @@ let
   # TODO a recursive version that terminates
   nestedAttrsOf = a:
     let
-      f = b: types.attrsOf (types.either a b);
+      f = b: (types.lazyAttrsOf or types.attrsOf) (types.either a b);
     in
       f (f (f (f (f (f (f (f (f (f a)))))))));
 
