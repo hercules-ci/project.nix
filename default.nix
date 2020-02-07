@@ -44,6 +44,7 @@ rec {
     # core
     ./modules/root.nix
     ./modules/nixpkgs.nix
+    ./modules/nixpkgs-invoke.nix
     ./modules/shell.nix
     ./modules/niv.nix
     ./modules/pre-commit.nix
