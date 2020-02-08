@@ -52,11 +52,14 @@ let
     check = builtins.isAttrs;
   };
 
+  # Turn a system string into an attribute set suitable for elaboration by Nixpkgs.
+  wrapSystem = system: if lib.isString system then { inherit system; } else system;
+
   defaultPkgs =
     let
       systems = if cfg.buildSystem == null
-      then { crossSystem = null; localSystem = cfg.system; }
-      else { crossSystem = cfg.system; localSystem = cfg.buildSystem; };
+      then { localSystem = wrapSystem cfg.system; crossSystem = null; }
+      else { localSystem = wrapSystem cfg.buildSystem; crossSystem = wrapSystem cfg.system; };
     in
       import cfg.source {
         inherit (cfg // systems) config overlays localSystem crossSystem;
