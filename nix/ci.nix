@@ -1,7 +1,4 @@
-{ projectNix ? import ../default.nix {}
-, project ? projectNix.evalProject { modules = [ ./project.nix ]; }
+{ projectNix ? import ../default.nix
+, project ? projectNix.evalNivProject { modules = [ ./project.nix ]; sources = import ./sources.nix; }
 }:
-
-{
-  pre-commit = project.config.pre-commit.run;
-}
+project.config.checks

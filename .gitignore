@@ -1,3 +1,7 @@
 
 # Nix package written by the pre-commit integration
-.pre-commit-hooks
+.pre-commit-config.yaml
+
+# Nix
+result
+result-*

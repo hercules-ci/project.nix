@@ -8,21 +8,22 @@ let
   recursiveRecurseIntoAttrs = v:
     if lib.isDerivation v
     then v
-    else if lib.isAttrs v && v.recurseForDerivations or true
+    else if lib.isAttrs v && v.recurseForDerivations or true # N.B. unlike nix-build, which assumes false
     then lib.mapAttrs (_k: recursiveRecurseIntoAttrs) v // { recurseForDerivations = true; }
     else v;
 
-  # TODO a recursive version that terminates
   nestedAttrsOf = a:
     let
-      f = b: types.attrsOf (types.either a b);
+      f = b: (types.lazyAttrsOf or types.attrsOf) (types.either a b);
     in
       f (f (f (f (f (f (f (f (f (f a)))))))));
 
 in
 {
   options.checks = mkOption {
-    type = nestedAttrsOf (types.nullOr types.package);
+    # TODO: custom type
+    # bool: Accept recurseForDerivations (recurseIntoAttrs / dontRecurseIntoAttrs)
+    type = nestedAttrsOf (types.nullOr (types.either types.package types.bool));
     default = {};
     description = ''
       Packages that ought be buildable, for the purpose of ensuring the quality

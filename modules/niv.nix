@@ -25,7 +25,7 @@ in
     };
 
     sources = mkOption {
-      type = types.attrsOf types.package;
+      type = (types.lazyAttrsOf or types.attrsOf) types.package;
       description = ''
         The niv sources as imported.
       '';
