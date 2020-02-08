@@ -26,6 +26,7 @@ rec {
         out;
 
   evalProject =
+    args@
     { modules
     , specialArgs ? {}
     , nixpkgs ? <nixpkgs>
@@ -34,7 +35,7 @@ rec {
       let
         out = lib.evalModules {
           check = true;
-          modules = builtinModules ++ modules;
+          modules = builtinModules ++ modules ++ lib.optional (args ? nixpkgs) { config.nixpkgs.source = nixpkgs; };
           specialArgs = specialArgs;
         };
       in

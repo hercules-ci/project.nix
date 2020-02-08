@@ -78,7 +78,10 @@ in
 
         Ignored when <code>nixpkgs.pkgs</code> is set.
       '';
-      defaultText = literalExample "sources.nixpkgs";
+      defaultText = literalExample ''
+        sources.nixpkgs   # evalNivProject sources argument
+        nixpkgs           # evalProject argument
+      '';
       example = "<nixpkgs>";
     };
 
