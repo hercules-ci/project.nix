@@ -17,9 +17,14 @@ rec {
       let
         out = evalProject {
           inherit lib;
-          modules = modules ++ [ { config.pinning.niv.enable = true; } ];
+          modules = modules ++ [
+            {
+              config.pinning.niv.enable = true;
+              config.pinning.niv.defaultSources = sources;
+            }
+          ];
           specialArgs = specialArgs // {
-            inherit sources;
+            defaultSources = sources;
           };
         };
       in

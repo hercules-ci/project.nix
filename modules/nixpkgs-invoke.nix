@@ -1,4 +1,4 @@
-modArgs@{ config, options, lib, ... }:
+{ config, options, lib, ... }:
 
 with lib;
 
@@ -72,7 +72,7 @@ in
 
     source = mkOption {
       type = types.path;
-      default = modArgs.sources.nixpkgs or (builtins.throw "Please define 'nixpkgs.source' or 'nixpkgs.pkgs'.");
+      default = config.pinning.niv.sources.nixpkgs or (builtins.throw "Please define 'nixpkgs.source' or 'nixpkgs.pkgs'.");
       description = ''
         Path to nixpkgs.
 
