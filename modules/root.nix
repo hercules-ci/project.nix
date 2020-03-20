@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 
 let
 
@@ -17,6 +17,16 @@ in
 
       # Strings are harder to accidentally add to the store.
       apply = toString;
+    };
+    rootSource = mkOption {
+      type = types.path;
+      description = ''
+        The root of the project, as a `cleanSource`-style filtered source.
+      '';
+      defaultText = lib.literalExample ''
+        cleanSource config.root
+      '';
+      default = lib.cleanSource config.root;
     };
   };
 }

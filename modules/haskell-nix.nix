@@ -163,8 +163,24 @@ let
                     in
                       pkg-set;
 
+            /*
+                `cutSource source f`
+
+                Find the location of `f` in `source`; filter such that only the
+                contents of `f` affect the hash; return `f` but as a `cleanSourceWith`-style source.
+             */
+            # TODO tests, improve error message
+            cutSource = source: f:
+              if lib.hasPrefix (toString source.origSrc) (toString f)
+              then
+                let
+                  relative = lib.substring (lib.stringLength (toString source.origSrc)) (-1) (toString f);
+                in
+                  haskell-nix.haskellLib.cleanSourceWith { src = source; subDir = relative; }
+              else builtins.throw "stack.yaml must be in or below project root";
+
             it = stackPackageSet {
-              src = dirOf config.stackYaml;
+              src = cutSource rootConfig.rootSource (dirOf config.stackYaml);
               stackYaml = baseNameOf config.stackYaml;
               inherit modules;
             };
