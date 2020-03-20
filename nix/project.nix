@@ -4,10 +4,10 @@
   for project.nix _itself_.
 
  */
-{ config, lib, pkgs, sources, ... }: {
+{ config, lib, pkgs, defaultSources, ... }: {
 
   imports = [
-    (sources.nix-pre-commit-hooks + "/nix/project-module.nix")
+    (defaultSources.nix-pre-commit-hooks + "/nix/project-module.nix")
   ];
 
   root = ../.;
@@ -19,4 +19,5 @@
   # TODO assert presence of the example check inside
   checks.tests.minimal = import ../tests/minimal {};
   checks.tests.minimal-niv = import ../tests/minimal-niv {};
+  checks.tests.niv-override = import ../tests/niv-override {};
 }
