@@ -50,6 +50,7 @@ let
               name: pkgCfg:
                 {
                   benchmarks = pkgCfg.components.benchmarks;
+                  checks = pkgCfg.checks;
                   exes = pkgCfg.components.exes;
                   foreignlibs = pkgCfg.components.foreignlibs;
                   library = pkgCfg.components.library or null;
