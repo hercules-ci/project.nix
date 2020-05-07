@@ -178,7 +178,7 @@ let
                   relative = lib.substring (lib.stringLength (toString source.origSrc)) (-1) (toString f);
                 in
                   haskell-nix.haskellLib.cleanSourceWith { src = source; subDir = relative; }
-              else builtins.throw "stack.yaml must be in or below project root";
+              else f;
 
             it = stackPackageSet {
               src = cutSource rootConfig.rootSource (dirOf config.stackYaml);
