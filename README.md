@@ -1,5 +1,5 @@
 
-# Project Status: Work in Progress
+# Project Status: EXPERIMENTAL
 
 This project is experimental and needs work to do anything like what it promises.
 
