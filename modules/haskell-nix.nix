@@ -111,7 +111,7 @@ let
           description = "Nixpkgs with haskell.nix overlays";
           default = let
             overlays =
-              (import config.sources.haskell-nix).overlays ++ [
+              (import config.sources.haskell-nix { system = pkgs.system; }).nixpkgsArgs.overlays ++ [
                 (
                   self: super: {
                     haskell-nix = super.haskell-nix
@@ -138,32 +138,6 @@ let
             pkgs' = config.pkgs;
             inherit (pkgs') haskell-nix;
 
-            stackPackageSet =
-              let
-                self = pkgs';
-              in
-                with haskell-nix; # from here on it's like upstream stackProject', except the last line
-                { ... }@args:
-                  let
-                    stack = importAndFilterProject (callStackToNix ({ inherit cache; } // args));
-                    generatedCache = genStackCache {
-                      inherit (args) src;
-                      stackYaml = args.stackYaml or "stack.yaml";
-                    };
-                    cache = args.cache or generatedCache;
-                  in
-                    let
-                      pkg-set = mkStackPkgSet
-                        {
-                          stack-pkgs = stack.pkgs;
-                          pkg-def-extras = (args.pkg-def-extras or []);
-                          modules = self.lib.singleton (mkCacheModule cache)
-                          ++ (args.modules or [])
-                          ++ self.lib.optional (args ? ghc) { ghc.package = args.ghc; };
-                        };
-                    in
-                      pkg-set;
-
             /*
                 `cutSource source f`
 
@@ -180,14 +154,14 @@ let
                   haskell-nix.haskellLib.cleanSourceWith { src = source; subDir = relative; }
               else f;
 
-            it = stackPackageSet {
+            it = haskell-nix.stackProject' {
               src = cutSource rootConfig.rootSource (dirOf config.stackYaml);
               stackYaml = baseNameOf config.stackYaml;
               inherit modules;
             };
 
           in
-            it.config;
+            it.pkg-set.config;
       };
     };
 
