@@ -21,7 +21,13 @@ in
       description = ''
         The niv package to use.
       '';
-      default = (import cfg.sources.niv { inherit pkgs; }).niv;
+      defaultText = ''
+        pkgs.niv unless niv is present in the niv sources.
+      '';
+      default =
+        if cfg.sources ? niv
+        then (import cfg.sources.niv { inherit pkgs; }).niv
+        else pkgs.niv or pkgs.haskellPackages.niv or (builtins.throw "Could not find a suitable default niv package. Add niv to your niv sources or specify pinning.niv.package.");
     };
 
     sources = mkOption {
