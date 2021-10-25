@@ -65,8 +65,8 @@ in
       pinning.niv.sources =
         lib.mapAttrs (k: v: lib.mkDefault v) cfg.defaultSources;
       _module.args.sources = cfg.sources;
-      pre-commit.settings = mkIf config.pre-commit.enable {
-        excludes = [ "nix/sources.nix$" ];
+      pre-commit.settings = {
+        excludes = mkIf config.pre-commit.enable [ "nix/sources.nix$" ];
       };
     }
   );
