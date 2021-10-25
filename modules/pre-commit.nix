@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, defaultSources, lib, pkgs, ... }:
 
 let
 
@@ -24,17 +24,34 @@ in
       '';
     };
 
+    source = mkOption {
+      type = types.path;
+      default = defaultSources.nix-pre-commit-hooks;
+      defaultText = lib.literalExample "defaultSources.nix-pre-commit-hooks";
+    };
+
+    settings = mkOption {
+      type = types.submoduleWith {
+        modules = [ (cfg.source + "/modules/all-modules.nix") ];
+        specialArgs = { inherit pkgs; };
+      };
+    };
+
   };
 
   config = mkIf cfg.enable {
 
-    shell.packages = [ cfg.package ];
+    shell.packages = [ cfg.settings.package ];
 
     activation.hooks = [
-      config.pre-commit.installationScript
+      config.pre-commit.settings.installationScript
     ];
 
-    checks.pre-commit = cfg.run;
+    checks.pre-commit = cfg.settings.run;
 
+    pre-commit.settings = {
+      rootSrc = config.rootSource;
+      package = lib.mkDefault pkgs.pre-commit;
+    };
   };
 }
