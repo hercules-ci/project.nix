@@ -9,7 +9,10 @@
   pre-commit.enable = true;
   pre-commit.settings.tools.nixpkgs-fmt = lib.mkForce pkgs.nixpkgs-fmt;
   pre-commit.settings.hooks.nixpkgs-fmt.enable = true;
-  pre-commit.settings.excludes = [ "tests/.*" ];
+  pre-commit.settings.excludes = [
+    "tests/.*"
+    "lib/dimension.nix" # destroys indentation in doc comment
+  ];
 
   # TODO assert presence of the example check inside
   checks.tests.minimal = import ../tests/minimal { };
