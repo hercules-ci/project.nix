@@ -21,7 +21,7 @@ let
           '';
           type = types.coercedTo (types.unspecified) (x: [ x ]) (types.listOf types.unspecified);
           apply = config.applyModules;
-          default = [];
+          default = [ ];
         };
 
         applyModules = mkOption {
@@ -109,23 +109,24 @@ let
         };
         pkgs = lib.mkOption {
           description = "Nixpkgs with haskell.nix overlays";
-          default = let
-            overlays =
-              (import config.sources.haskell-nix { system = pkgs.system; }).nixpkgsArgs.overlays ++ [
-                (
-                  self: super: {
-                    haskell-nix = super.haskell-nix
-                    // lib.optionalAttrs (config.sources.hackage-nix != null) {
-                      hackageSrc = config.sources.hackage-nix;
+          default =
+            let
+              overlays =
+                (import config.sources.haskell-nix { system = pkgs.system; }).nixpkgsArgs.overlays ++ [
+                  (
+                    self: super: {
+                      haskell-nix = super.haskell-nix
+                      // lib.optionalAttrs (config.sources.hackage-nix != null) {
+                        hackageSrc = config.sources.hackage-nix;
+                      }
+                      // lib.optionalAttrs (config.sources.stackage-nix != null) {
+                        stackageSrc = config.sources.stackage-nix;
+                      };
                     }
-                    // lib.optionalAttrs (config.sources.stackage-nix != null) {
-                      stackageSrc = config.sources.stackage-nix;
-                    };
-                  }
-                )
-              ];
-          in
-            pkgs.extend (lib.foldr lib.composeExtensions (_: _: {}) overlays);
+                  )
+                ];
+            in
+            pkgs.extend (lib.foldr lib.composeExtensions (_: _: { }) overlays);
         };
       };
       config = lib.mkIf (config.stackYaml != null) {
@@ -139,11 +140,11 @@ let
             inherit (pkgs') haskell-nix;
 
             /*
-                `cutSource source f`
+              `cutSource source f`
 
-                Find the location of `f` in `source`; filter such that only the
-                contents of `f` affect the hash; return `f` but as a `cleanSourceWith`-style source.
-             */
+              Find the location of `f` in `source`; filter such that only the
+              contents of `f` affect the hash; return `f` but as a `cleanSourceWith`-style source.
+            */
             # TODO tests, improve error message
             cutSource = source: f:
               if lib.hasPrefix (toString source.origSrc) (toString f)
@@ -151,7 +152,7 @@ let
                 let
                   relative = lib.substring (lib.stringLength (toString source.origSrc)) (-1) (toString f);
                 in
-                  haskell-nix.haskellLib.cleanSourceWith { src = source; subDir = relative; }
+                haskell-nix.haskellLib.cleanSourceWith { src = source; subDir = relative; }
               else f;
 
             it = haskell-nix.stackProject' {
@@ -161,7 +162,7 @@ let
             };
 
           in
-            it.pkg-set.config;
+          it.pkg-set.config;
       };
     };
 
@@ -176,7 +177,7 @@ in
     packageSets.haskell-nix = mkOption {
       description = "Adds haskell.nix package sets to the sets argument.";
       type = types.attrsOf (types.submodule submod);
-      default = {};
+      default = { };
     };
   };
 

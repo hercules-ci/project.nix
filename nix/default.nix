@@ -3,7 +3,7 @@
 }:
 
 import sources.nixpkgs {
-  overlays = [];
-  config = {};
+  overlays = [ ];
+  config = { };
   inherit system;
 }

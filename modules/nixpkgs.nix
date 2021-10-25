@@ -20,7 +20,7 @@ in
     '';
 
     default =
-      import (config.root + "/nix/default.nix") {};
+      import (config.root + "/nix/default.nix") { };
     defaultText = literalExample
       ''import (config.root + "/nix/default.nix") {}'';
   };

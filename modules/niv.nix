@@ -39,7 +39,7 @@ in
         # if config.pinning.niv.enable
         import (config.root + "/nix/sources.nix")
       '';
-      default = {}; # See config.(mkIf).pinning.niv.sources
+      default = { }; # See config.(mkIf).pinning.niv.sources
     };
 
     defaultSources = mkOption {
