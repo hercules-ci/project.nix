@@ -16,7 +16,7 @@ let
     let
       f = b: (types.lazyAttrsOf or types.attrsOf) (types.either a b);
     in
-      f (f (f (f (f (f (f (f (f (f a)))))))));
+    f (f (f (f (f (f (f (f (f (f a)))))))));
 
 in
 {
@@ -24,7 +24,7 @@ in
     # TODO: custom type
     # bool: Accept recurseForDerivations (recurseIntoAttrs / dontRecurseIntoAttrs)
     type = nestedAttrsOf (types.nullOr (types.either types.package types.bool));
-    default = {};
+    default = { };
     description = ''
       Packages that ought be buildable, for the purpose of ensuring the quality
       of the project.

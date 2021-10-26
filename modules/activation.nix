@@ -31,7 +31,7 @@ in
          - variables are not propagated to the shell.
          - activation hooks may be run separately or before most shell.hooks.
       '';
-      default = [];
+      default = [ ];
     };
 
     activation.enableShellHook = mkOption {

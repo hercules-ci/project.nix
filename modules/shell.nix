@@ -11,7 +11,7 @@ in
   options.shell = {
     packages = mkOption {
       type = types.listOf types.package;
-      default = [];
+      default = [ ];
       example = literalExample "[ pkgs.node2nix ]";
       description = ''
         The set of packages that appear when you run
@@ -24,7 +24,7 @@ in
       description = ''
         bash snippets to run when entering the project's nix-shell.
       '';
-      default = [];
+      default = [ ];
       example = [
         ''
           if ! type git >/dev/null; then
@@ -40,7 +40,7 @@ in
       description = ''
         Extra variables to set in the project's nix-shell.
       '';
-      default = {};
+      default = { };
       example = { LANG = "en_US.UTF-8"; };
     };
 

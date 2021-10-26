@@ -39,7 +39,7 @@ in
         # if config.pinning.niv.enable
         import (config.root + "/nix/sources.nix")
       '';
-      default = {}; # See config.(mkIf).pinning.niv.sources
+      default = { }; # See config.(mkIf).pinning.niv.sources
     };
 
     defaultSources = mkOption {
@@ -65,8 +65,9 @@ in
       pinning.niv.sources =
         lib.mapAttrs (k: v: lib.mkDefault v) cfg.defaultSources;
       _module.args.sources = cfg.sources;
-    } // lib.optionalAttrs (options ? pre-commit.excludes) {
-      pre-commit.excludes = [ "nix/sources.nix$" ];
+      pre-commit.settings = {
+        excludes = mkIf config.pre-commit.enable [ "nix/sources.nix$" ];
+      };
     }
   );
 }

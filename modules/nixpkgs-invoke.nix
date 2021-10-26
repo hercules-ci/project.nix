@@ -18,13 +18,13 @@ let
       lhs = optCall lhs_ { inherit pkgs; };
       rhs = optCall rhs_ { inherit pkgs; };
     in
-      recursiveUpdate lhs rhs // optionalAttrs (lhs ? packageOverrides) {
-        packageOverrides = pkgs:
-          optCall lhs.packageOverrides pkgs // optCall (attrByPath [ "packageOverrides" ] ({}) rhs) pkgs;
-      } // optionalAttrs (lhs ? perlPackageOverrides) {
-        perlPackageOverrides = pkgs:
-          optCall lhs.perlPackageOverrides pkgs // optCall (attrByPath [ "perlPackageOverrides" ] ({}) rhs) pkgs;
-      };
+    recursiveUpdate lhs rhs // optionalAttrs (lhs ? packageOverrides) {
+      packageOverrides = pkgs:
+        optCall lhs.packageOverrides pkgs // optCall (attrByPath [ "packageOverrides" ] ({ }) rhs) pkgs;
+    } // optionalAttrs (lhs ? perlPackageOverrides) {
+      perlPackageOverrides = pkgs:
+        optCall lhs.perlPackageOverrides pkgs // optCall (attrByPath [ "perlPackageOverrides" ] ({ }) rhs) pkgs;
+    };
 
   configType = mkOptionType {
     name = "nixpkgs-config";
@@ -35,8 +35,8 @@ let
           if c x then true
           else lib.traceSeqN 1 x false;
       in
-        traceXIfNot isConfig;
-    merge = args: fold (def: mergeConfig def.value) {};
+      traceXIfNot isConfig;
+    merge = args: fold (def: mergeConfig def.value) { };
   };
 
   overlayType = mkOptionType {
@@ -57,13 +57,14 @@ let
 
   defaultPkgs =
     let
-      systems = if cfg.buildSystem == null
-      then { localSystem = wrapSystem cfg.system; crossSystem = null; }
-      else { localSystem = wrapSystem cfg.buildSystem; crossSystem = wrapSystem cfg.system; };
+      systems =
+        if cfg.buildSystem == null
+        then { localSystem = wrapSystem cfg.system; crossSystem = null; }
+        else { localSystem = wrapSystem cfg.buildSystem; crossSystem = wrapSystem cfg.system; };
     in
-      import cfg.source {
-        inherit (cfg // systems) config overlays localSystem crossSystem;
-      };
+    import cfg.source {
+      inherit (cfg // systems) config overlays localSystem crossSystem;
+    };
 
 in
 
@@ -86,7 +87,7 @@ in
     };
 
     config = mkOption {
-      default = {};
+      default = { };
       example = literalExample
         ''
           { allowBroken = true; allowUnfree = true; }
@@ -102,7 +103,7 @@ in
     };
 
     overlays = mkOption {
-      default = [];
+      default = [ ];
       example = literalExample
         ''
           [
