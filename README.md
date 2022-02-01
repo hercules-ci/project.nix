@@ -1,8 +1,9 @@
 
-# Project Status: EXPERIMENTAL
+# Project Status: DEPRECATED
 
-This project is experimental and needs work to do anything like what it promises.
+The ideas live on in [`flake-modules-core`](https://github.com/hercules-ci/flake-modules-core)
 
+<details><summary>Old description</summary>
 
 # project.nix
 
@@ -32,3 +33,4 @@ By default, the configuration is applied when you run `nix-shell` in your projec
      - vscode (planned)
          - tasks.json (planned)
 
+</details>
